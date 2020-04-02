@@ -4,10 +4,7 @@ import ujson
 import falcon
 from loguru import logger
 
-logger.remove()
-logger.add(sys.stderr, format="{time} | {module} |{level}|{message}")
-
-
+@logger.catch
 class HealthCheck(object):
     def on_get(self, req, resp):
         try:
