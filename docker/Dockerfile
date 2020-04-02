@@ -9,19 +9,10 @@ RUN dnf install -y \
 # Configure Nginx
 RUN rm -f /etc/nginx/conf.d/* /etc/nginx/nginx.conf
 COPY assets/nginx.conf /etc/nginx/
-COPY assets/api.conf /etc/nginx/conf.d/
+COPY assets/vhosts/*.conf /etc/nginx/conf.d/
 
-#
-# Install PIP Dependencies
-# 
-# COPY src/api/requirements.txt
-# RUN pip3 install -r /root/requirements.txt
-
-# Expose Nginx and MariaDB
+# Expose Nginx
 EXPOSE 80
 
 # Start Nginx and sleep infinity to keep container running
-CMD mysql_install_db --user=root --datadir=/var/lib/mysql/ ; \
-    /usr/bin/mysqld_safe --datadir='/var/lib/mysql/'; \
-    /usr/sbin/nginx -c /etc/nginx/nginx.conf ; \
-    sleep infinity
+CMD pip3 install -r /opt/ping/src/api/requirements.txt ; /usr/sbin/nginx -c /etc/nginx/nginx.conf ; sleep infinity
