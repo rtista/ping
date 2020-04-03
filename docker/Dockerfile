@@ -9,10 +9,13 @@ RUN dnf install -y \
 # Configure Nginx
 RUN rm -f /etc/nginx/conf.d/* /etc/nginx/nginx.conf
 COPY assets/nginx.conf /etc/nginx/
-COPY assets/vhosts/*.conf /etc/nginx/conf.d/
+COPY assets/ping.conf /etc/nginx/conf.d/
 
 # Expose Nginx
 EXPOSE 80
 
 # Start Nginx and sleep infinity to keep container running
-CMD pip3 install -r /opt/ping/src/api/requirements.txt ; /usr/sbin/nginx -c /etc/nginx/nginx.conf ; sleep infinity
+CMD pip3 install -r /opt/ping/api/requirements.txt ; \
+    cd /opt/ping/ui/ping/ && ng serve ; \ 
+    /usr/sbin/nginx -c /etc/nginx/nginx.conf ; \
+    sleep infinity
