@@ -2,3 +2,4 @@ falcon==2.0.0
 loguru==0.4.1
 ujson==2.0.3
 setproctitle==1.1.10
+bjoern==3.1.0
