@@ -13,6 +13,7 @@ docker-start:
 	@echo "-- Starting Container --"
 	@docker start ping
 	@docker start pingdb
+	@docker exec -it pingdb mysql -h 127.0.0.1 -P 3306 -u root -ppassword -e"GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION; FLUSH PRIVILEGES;"
 
 docker-enter:
 	@echo "-- Entering Container --"
