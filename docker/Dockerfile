@@ -16,6 +16,6 @@ EXPOSE 80
 
 # Start Nginx and sleep infinity to keep container running
 CMD pip3 install -r /opt/ping/api/requirements.txt ; \
-    cd /opt/ping/ui/ping/ && ng serve ; \ 
+    cd /opt/ping/ui/ping/ && ng serve --aot ; \ 
     /usr/sbin/nginx -c /etc/nginx/nginx.conf ; \
     sleep infinity
