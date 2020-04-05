@@ -30,3 +30,4 @@ docker-clean:
 	@echo "-- Docker Clean --"
 	@docker rm -f ping pingdb
 	@docker image rm -f ping
+	@docker network rm ping-network
