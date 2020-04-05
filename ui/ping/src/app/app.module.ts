@@ -8,6 +8,8 @@ import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './store/reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,7 @@ import { reducers, metaReducers } from './store/reducers';
     LoginModule,
     HomeModule,
     StoreModule.forRoot(reducers, { metaReducers }),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
   ],
   providers: [],
   bootstrap: [AppComponent]
