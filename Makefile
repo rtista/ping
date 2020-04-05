@@ -1,20 +1,21 @@
 docker-build:
-	@docker create --name pingdb \
-					-e MYSQL_ROOT_PASSWORD=password \
-					-p 3306:3306 \
-					mariadb:10.3
+	@docker network create -d bridge ping-network
 	@docker build -t ping docker/
 	@docker create --name ping \
 					-v $(shell pwd)/:/opt/ping/:Z \
+					--network ping-network \
 					-p 8080:80 \
-					--link pingdb \
 					ping
+	@docker create --name pingdb \
+					-e MYSQL_ROOT_PASSWORD=password \
+					--network ping-network \
+					-p 3306:3306 \
+					mariadb:10.3
 
 docker-start:
 	@echo "-- Starting Container --"
-	@docker start ping
 	@docker start pingdb
-	@docker exec -it pingdb mysql -h 127.0.0.1 -P 3306 -u root -ppassword -e"GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+	@docker start ping
 
 docker-enter:
 	@echo "-- Entering Container --"
@@ -28,4 +29,4 @@ docker-stop:
 docker-clean:
 	@echo "-- Docker Clean --"
 	@docker rm -f ping pingdb
-	@docker image rm -f ping mariadb:10.3
+	@docker image rm -f ping
