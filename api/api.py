@@ -3,6 +3,9 @@ import bjoern
 import falcon
 from loguru import logger
 from setproctitle import setproctitle
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session
 
 # Batteries
 import os
@@ -12,11 +15,8 @@ from datetime import timedelta
 
 # Local Imports
 from config import AppConfig
-from middleware import LoggingMiddleware
+from middleware import LoggingMiddleware, MySQLConnectionMiddleware
 from resources import BASE_ENDPOINT, ROUTES
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import scoped_session
 
 
 class PingAPI(multiprocessing.Process):
@@ -94,7 +94,8 @@ class PingAPI(multiprocessing.Process):
         # Create WSGI Application
         api = falcon.API(
             middleware=[
-                LoggingMiddleware(Session),
+                LoggingMiddleware(),
+                MySQLConnectionMiddleware(Session)
             ]
         )
 
