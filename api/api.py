@@ -14,6 +14,9 @@ from datetime import timedelta
 from config import AppConfig
 from middleware import LoggingMiddleware
 from resources import BASE_ENDPOINT, ROUTES
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session
 
 
 class PingAPI(multiprocessing.Process):
@@ -78,10 +81,20 @@ class PingAPI(multiprocessing.Process):
         with open(AppConfig.PIDFILE, 'w+') as pidfile:
             pidfile.write(str(os.getpid()))
 
+        ##################################
+        # MySQL Connection Configuration #
+        ##################################
+        engine = create_engine(
+            '{engine}://{username}:{password}@{host}:{port}/'.format(**AppConfig.MYSQL)
+        )
+
+        session_factory = sessionmaker(bind=engine)
+        Session = scoped_session(session_factory)
+
         # Create WSGI Application
         api = falcon.API(
             middleware=[
-                LoggingMiddleware(),
+                LoggingMiddleware(Session),
             ]
         )
 

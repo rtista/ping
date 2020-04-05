@@ -38,10 +38,10 @@ class DevelopmentConfig(Config):
 
     # ActiveMQ connection configuration
     MYSQL = {
-        'engine': 'mysql+mysqldb',
-        'username': 'user',
+        'engine': 'mysql+pymysql',
+        'username': 'root',
         'password': 'password',
-        'host': '127.0.0.1',
+        'host': 'pingdb',
         'port': 3306,
         'dbname': 'ping'
     }
