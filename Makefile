@@ -1,13 +1,14 @@
 docker-build:
-	@docker build -t ping docker/
-	@docker create --name ping \
-					-v $(shell pwd)/:/opt/ping/:Z \
-					-p 8080:80 \
-					ping
 	@docker create --name pingdb \
 					-e MYSQL_ROOT_PASSWORD=password \
 					-p 3306:3306 \
 					mariadb:10.3
+	@docker build -t ping docker/
+	@docker create --name ping \
+					-v $(shell pwd)/:/opt/ping/:Z \
+					-p 8080:80 \
+					--link pingdb \
+					ping
 
 docker-start:
 	@echo "-- Starting Container --"
