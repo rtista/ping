@@ -96,7 +96,7 @@ class PingAPI(multiprocessing.Process):
             Base.metadata.create_all(engine)
 
         except OperationalError as e:
-            print('Operational Error\nCode: {}\nMessage: {}'.format(e.orig.args[0], e.orig.args[1]))
+            print(f'Operational Error\nCode: {e.orig.args[0]}\nMessage: {e.orig.args[1]}')
             exit(1)
 
         # Falcon API Configuration
