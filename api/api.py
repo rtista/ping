@@ -94,7 +94,6 @@ class PingAPI(multiprocessing.Process):
         # MySQL Table Models Configuration
         try:
             Base.metadata.create_all(engine)
-            logger.trace('welelel')
 
         except (OperationalError) as e:
             logger.error(f'Operational Error\nCode: {e.orig.args[0]}\nMessage: {e.orig.args[1]}')
