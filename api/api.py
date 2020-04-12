@@ -85,7 +85,7 @@ class PingAPI(multiprocessing.Process):
 
         # MySQL Connection Configuration
         engine = create_engine(
-            '{engine}://{username}:{password}@{host}:{port}/'.format(**AppConfig.MYSQL)
+            '{engine}://{username}:{password}@{host}:{port}/{dbname}'.format(**AppConfig.MYSQL)
         )
 
         session_factory = sessionmaker(bind=engine)
