@@ -99,14 +99,14 @@ class PingAPI(multiprocessing.Process):
             print('Operational Error\nCode: {}\nMessage: {}'.format(e.orig.args[0], e.orig.args[1]))
             exit(1)
 
-            # Falcon API Configuration
-            # Create WSGI Application
-            api = falcon.API(
+        # Falcon API Configuration
+        # Create WSGI Application
+        api = falcon.API(
                 middleware=[
                     LoggingMiddleware(),
                     MySQLConnectionMiddleware(Session)
                 ]
-            )
+        )
 
         # Route Loading
         for route in ROUTES:
