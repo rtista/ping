@@ -94,18 +94,19 @@ class PingAPI(multiprocessing.Process):
         # MySQL Table Models Configuration
         try:
             Base.metadata.create_all(engine)
+            logger.trace('welelel')
 
-        except OperationalError as e:
-            print(f'Operational Error\nCode: {e.orig.args[0]}\nMessage: {e.orig.args[1]}')
+        except (OperationalError) as e:
+            logger.error(f'Operational Error\nCode: {e.orig.args[0]}\nMessage: {e.orig.args[1]}')
             exit(1)
 
         # Falcon API Configuration
         # Create WSGI Application
         api = falcon.API(
-                middleware=[
-                    LoggingMiddleware(),
-                    MySQLConnectionMiddleware(Session)
-                ]
+            middleware=[
+                LoggingMiddleware(),
+                MySQLConnectionMiddleware(Session)
+            ]
         )
 
         # Route Loading
