@@ -6,6 +6,7 @@ from setproctitle import setproctitle
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
+from models import Base
 
 # Batteries
 import os
@@ -17,6 +18,7 @@ from datetime import timedelta
 from config import AppConfig
 from middleware import LoggingMiddleware, MySQLConnectionMiddleware
 from resources import BASE_ENDPOINT, ROUTES
+from sqlalchemy.exc import OperationalError
 
 
 class PingAPI(multiprocessing.Process):
@@ -81,9 +83,7 @@ class PingAPI(multiprocessing.Process):
         with open(AppConfig.PIDFILE, 'w+') as pidfile:
             pidfile.write(str(os.getpid()))
 
-        ##################################
-        # MySQL Connection Configuration #
-        ##################################
+        # MySQL Connection Configuration
         engine = create_engine(
             '{engine}://{username}:{password}@{host}:{port}/'.format(**AppConfig.MYSQL)
         )
@@ -91,13 +91,22 @@ class PingAPI(multiprocessing.Process):
         session_factory = sessionmaker(bind=engine)
         Session = scoped_session(session_factory)
 
-        # Create WSGI Application
-        api = falcon.API(
-            middleware=[
-                LoggingMiddleware(),
-                MySQLConnectionMiddleware(Session)
-            ]
-        )
+        # MySQL Table Models Configuration
+        try:
+            Base.metadata.create_all(engine)
+
+        except OperationalError as e:
+            print('Operational Error\nCode: {}\nMessage: {}'.format(e.orig.args[0], e.orig.args[1]))
+            exit(1)
+
+            # Falcon API Configuration
+            # Create WSGI Application
+            api = falcon.API(
+                middleware=[
+                    LoggingMiddleware(),
+                    MySQLConnectionMiddleware(Session)
+                ]
+            )
 
         # Route Loading
         for route in ROUTES:
