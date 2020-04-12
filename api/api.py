@@ -17,7 +17,7 @@ from datetime import timedelta
 # Local Imports
 from config import AppConfig
 from middleware import LoggingMiddleware, MySQLConnectionMiddleware
-from resources import BASE_ENDPOINT, ROUTES
+from controllers import BASE_ENDPOINT, ROUTES
 from sqlalchemy.exc import OperationalError
 
 
