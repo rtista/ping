@@ -6,7 +6,7 @@ from setproctitle import setproctitle
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
-from models import Base
+from sqlalchemy.exc import OperationalError
 
 # Batteries
 import os
@@ -15,10 +15,10 @@ import multiprocessing
 from datetime import timedelta
 
 # Local Imports
+from models import Base
 from config import AppConfig
 from middleware import LoggingMiddleware, MySQLConnectionMiddleware
 from controllers import BASE_ENDPOINT, ROUTES
-from sqlalchemy.exc import OperationalError
 
 
 class PingAPI(multiprocessing.Process):
