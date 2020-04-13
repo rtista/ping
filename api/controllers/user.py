@@ -1,13 +1,20 @@
-from models import User
-
+# Third-party Imports
 import falcon
 from loguru import logger
 from passlib.hash import pbkdf2_sha256
 from sqlalchemy.exc import SQLAlchemyError
 
+# Local Imports
+from models import User
 
-class UserController:
 
+class UserController(object):
+    """
+    Represents the User REST resource.
+    
+    Args:
+        object (class): Base native object class.
+    """
     def on_post(self,req,resp):
         """
         Handle POST requests.
@@ -16,7 +23,7 @@ class UserController:
         password = req.media.get('password')
 
         # Check if parameters not empty
-        if None in [username, password]:
+        if None in (username, password):
             raise falcon.HTTPBadRequest('Bad Request', 'Invalid Parameters')
 
         # Hash user password
@@ -38,8 +45,8 @@ class UserController:
             self.db_conn.rollback()
 
             # Send error
-            logger.error('Message: {}'.format(str(e)))
-            raise falcon.HTTPInternalServerError('Internal Server Error', 'Message: {}'.format(str(e)))
+            logger.error(f'Database Error: (Code: {e.orig.args[0]} Message: {e.orig.args[1]})')
+            raise falcon.HTTPInternalServerError('Internal Server Error', 'An error ocurred while communicating with the database.')
 
         resp.media = {'success': 'user_created'}
         resp.status = falcon.HTTP_201

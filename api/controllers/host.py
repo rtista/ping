@@ -12,7 +12,7 @@ from models import Host
 
 class HostController(object):
     """
-    Represents the host resource.
+    Represents the Host REST resource.
     
     Args:
         object (class): Base native object class.
