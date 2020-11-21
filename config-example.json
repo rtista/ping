@@ -1,0 +1,10 @@
+{
+    "log": {
+      "level": "DEBUG",
+      "file": "logs/ping.log",
+      "error": "logs/ping-error.log"
+    },
+    "pidfile": "ping.pid",
+    "socket": "ping.sock",
+    "datastore": "sqlite:///ping.sqlite"
+}

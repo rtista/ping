@@ -1,10 +1,7 @@
 FROM centos:8
 
 # Install system requirements
-RUN dnf install -y epel-release
-RUN dnf install -y \
-    htop vim net-tools nginx \
-    gcc libev-devel python36-devel
+RUN dnf install -y net-tools nginx gcc libev-devel python38-devel
 
 # Configure Nginx
 RUN rm -f /etc/nginx/conf.d/* /etc/nginx/nginx.conf
@@ -15,7 +12,7 @@ COPY assets/ping.conf /etc/nginx/conf.d/
 EXPOSE 80
 
 # Start Nginx and sleep infinity to keep container running
-CMD pip3 install -r /opt/ping/api/requirements.txt ; \
-    cd /opt/ping/ui/ping/ && ng serve --aot ; \ 
+CMD cd /opt/ping ; pip3 install -r requirements.txt ; python3 ping-cli.py start ; \
+    cd /opt/ping/ui/ ; ng serve --aot ; \
     /usr/sbin/nginx -c /etc/nginx/nginx.conf ; \
     sleep infinity

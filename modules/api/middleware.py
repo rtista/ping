@@ -1,5 +1,7 @@
-# Third-party imports
+# Batteries
 import time
+
+# Third-party Imports
 from loguru import logger
 
 
@@ -7,7 +9,9 @@ class LoggingMiddleware(object):
     """
     Log every request made to the server
     """
-    def process_request(self, req, resp):
+
+    @classmethod
+    def process_request(cls, req, resp):
         """Process the request before routing it.
 
         Note:
@@ -23,8 +27,10 @@ class LoggingMiddleware(object):
         """
         req.req_start_time = time.time()
 
-    def process_response(self, req, resp, resource, req_succeeded):
+    @classmethod
+    def process_response(cls, req, resp, resource, req_succeeded):
         """Post-processing of the response (after routing).
+
         Args:
             req: Request object.
             resp: Response object.
@@ -35,25 +41,34 @@ class LoggingMiddleware(object):
                 the framework processed and routed the request;
                 otherwise False.
         """
-        logger.info(f'{req.access_route} {req.method} {req.uri} {resp.status} {req_succeeded} {round(float(time.time() - req.req_start_time), 4)}')
+        reqtime = round(float(time.time() - req.req_start_time), 3)
+        logger.info(f'{req.access_route} {req.method} {req.uri} {resp.status} {req_succeeded} {reqtime}')
 
 
-class MySQLConnectionMiddleware(object):
+class DatabaseConnectionMiddleware(object):
     """
-    Appends a MySQL connection to the database.
+    Shares the database connection amongst all requests.
+
+    Args:
+        builtins.object (class): Native object class.
     """
-    def __init__(self, session_manager):
+
+    def __init__(self, session):
         """
         Create the middleware instance.
-        
+
         Args:
-            session_manager (sqlalchemy.orm.scoped_session): The scoped session class.
+            session (): The scoped session object.
         """
-        self.Session = session_manager
+        self._Session = session
 
     def process_resource(self, req, resp, resource, params):
         """
         Process the request after routing.
+
+        Note:
+            This method is only called when the request matches
+            a route to a resource.
 
         Args:
             req: Request object that will be passed to the
@@ -67,23 +82,4 @@ class MySQLConnectionMiddleware(object):
                 that will be passed to the resource's responder
                 method as keyword arguments.
         """
-        resource.db_conn = self.Session()
-
-    def process_response(self, req, resp, resource, req_succeeded):
-        """
-        Post-processing of the response (after routing).
-
-        Args:
-            req: Request object.
-            resp: Response object.
-            resource: Resource object to which the request was
-                routed. May be None if no route was found
-                for the request.
-            req_succeeded: True if no exceptions were raised while
-                the framework processed and routed the request;
-                otherwise False.
-        """
-        if hasattr(resource, 'db_conn'):
-            if not req_succeeded:
-                resource.db_conn.rollback()
-            self.Session.remove()
+        resource.dbsession = self._Session

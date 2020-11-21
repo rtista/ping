@@ -9,8 +9,8 @@ import threading
 import inotify.adapters
 
 
-BJOERN_CMD_START = tuple("python3 ping-api-ctl.py start".split())
-BJOERN_CMD_RESTART = tuple("python3 ping-api-ctl.py restart".split())
+BJOERN_CMD_START = tuple("python3 ping-cli.py start".split())
+BJOERN_CMD_RESTART = tuple("python3 ping-cli.py restart".split())
 CHANGE_EVENTS = ("IN_MODIFY", "IN_ATTRIB", "IN_DELETE")
 WATCH_EXTENSIONS = (".py",)
 

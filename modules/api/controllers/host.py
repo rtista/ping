@@ -4,10 +4,9 @@ from loguru import logger
 from sqlalchemy.exc import SQLAlchemyError
 
 # Batteries
-import sys
 
 # Local Imports
-from models import Host
+from shared.models import Host
 
 
 class HostController(object):

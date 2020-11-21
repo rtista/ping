@@ -5,7 +5,7 @@ from passlib.hash import pbkdf2_sha256
 from sqlalchemy.exc import SQLAlchemyError
 
 # Local Imports
-from models import User
+from shared.models import User
 
 
 class UserController(object):
