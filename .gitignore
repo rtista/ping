@@ -129,7 +129,8 @@ dmypy.json
 .pyre/
 
 # Custom
+.idea/
 .vscode/
+config.json
 *.tar.gz
 *.pid
-config.json
